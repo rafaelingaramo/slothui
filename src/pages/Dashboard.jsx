@@ -14,18 +14,22 @@ function Dashboard() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedQueue, setSelectedQueue] = useState(null);
+  const [purging, setPurging] = useState(false);
 
   const confirmPurge = async () => {
     if (!selectedQueue) return;
+    setPurging(true);
     try {
       const response = await fetch(`http://localhost:8080/api/messages/${encodeURIComponent(selectedQueue)}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Failed to purge queue");
-      queryClient.invalidateQueries(["messages"]);
+      await queryClient.invalidateQueries(["messages"]);
+      await queryClient.refetchQueries({ queryKey: ["messages"], exact: true });
     } catch (err) {
       alert(err.message);
     } finally {
+      setPurging(false);
       setModalOpen(false);
       setSelectedQueue(null);
     }
@@ -60,6 +64,7 @@ function Dashboard() {
                     }}
                     className="text-red-500 hover:text-red-700"
                     aria-label="Purge Queue"
+                    disabled={purging}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                       <path
@@ -81,19 +86,27 @@ function Dashboard() {
           <div className="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Confirm Purge</h3>
             <p className="text-sm text-gray-600 mb-6">
-              Are you sure you want to purge the queue <span className="font-semibold text-red-600">{selectedQueue}</span>?
+              Are you sure you want to purge the queue <span className="font-semibold text-red-600">{selectedQueue}</span>? The purge operation might stall the system for a few moments
             </p>
             <div className="flex justify-end gap-4">
               <button
                 onClick={() => setModalOpen(false)}
                 className="px-4 py-2 text-sm bg-gray-200 rounded hover:bg-gray-300"
+                disabled={purging}
               >
                 Cancel
               </button>
               <button
                 onClick={confirmPurge}
-                className="px-4 py-2 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+                className="px-4 py-2 text-sm bg-red-600 text-white rounded hover:bg-red-700 flex items-center gap-2"
+                disabled={purging}
               >
+                {purging && (
+                  <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                  </svg>
+                )}
                 Purge
               </button>
             </div>
