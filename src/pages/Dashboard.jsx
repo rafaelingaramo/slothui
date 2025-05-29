@@ -25,7 +25,7 @@ function Dashboard() {
       });
       if (!response.ok) throw new Error("Failed to purge queue");
       await queryClient.invalidateQueries(["messages"]);
-      await queryClient.refetchQueries({ queryKey: ["messages"], exact: true });
+await queryClient.refetchQueries({ queryKey: ["messages"], exact: true });
     } catch (err) {
       alert(err.message);
     } finally {
@@ -37,7 +37,15 @@ function Dashboard() {
 
   return (
     <div className="text-gray-600">
-      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Dashboard</h2>
+      <div className="flex items-center justify-between mb-4">
+  <h2 className="text-2xl font-semibold text-gray-800">Dashboard</h2>
+  <button
+    onClick={() => queryClient.invalidateQueries(["messages"])}
+    className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+  >
+    Refresh Data
+  </button>
+</div>
       {isLoading && <p>Loading...</p>}
       {error && <p className="text-red-600">{error.message}</p>}
       {data && (
@@ -53,7 +61,7 @@ function Dashboard() {
                   <div>
                     <h3 className="text-lg font-medium text-gray-900 truncate">{item.key}</h3>
                     <p className="text-sm text-gray-500">
-                      Total Documents: <span className="text-blue-600 font-bold">{parsed.totalDocuments}</span>
+                      Total Documents: <span className="text-blue-600 font-bold">{parsed}</span>
                     </p>
                   </div>
                   <button
