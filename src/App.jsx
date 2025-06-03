@@ -13,6 +13,7 @@ import {
 import Dashboard from "./pages/Dashboard"
 import Logs from "./pages/Logs"
 import Users from "./pages/Users" 
+import Metrics from "./pages/Metrics"
 
 const queryClient = new QueryClient();
 
@@ -102,6 +103,7 @@ function AppLayout() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/logs" element={<Logs />} />
+            <Route path="/metrics" element={<Metrics />} />
             <Route path="/users" element={<Users />} />
           </Routes>
         </main>

@@ -17,7 +17,7 @@ function Logs() {
     if (socketRef.current) socketRef.current.close();
 
     retryCount.current++;
-    const socket = new WebSocket("ws://localhost:8081/ws");
+    const socket = new WebSocket("ws://localhost:8081/logs");
     socketRef.current = socket;
 
     socket.onopen = () => {
