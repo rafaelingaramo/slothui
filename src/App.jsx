@@ -12,7 +12,6 @@ import {
 } from "react-router-dom";
 import Dashboard from "./pages/Dashboard"
 import Logs from "./pages/Logs"
-import Settings from "./pages/Settings" 
 import Users from "./pages/Users" 
 
 const queryClient = new QueryClient();
@@ -61,10 +60,7 @@ function AppLayout() {
             <FiFileText className={`text-lg transition-all duration-300 ${sidebarOpen ? '' : 'mx-auto'}`} />
             <span className={`ml-3 transition-opacity duration-300 ${sidebarOpen ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'}`}>Logs</span>
           </Link>
-          <Link to="/settings" className="group relative flex items-center py-2 px-2 text-gray-700 hover:text-blue-600 text-sm transition-all duration-300">
-            <FiSettings className={`text-lg transition-all duration-300 ${sidebarOpen ? '' : 'mx-auto'}`} />
-            <span className={`ml-3 transition-opacity duration-300 ${sidebarOpen ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'}`}>Settings</span>
-          </Link>
+         
           <Link to="/metrics" className="group relative flex items-center py-2 px-2 text-gray-700 hover:text-blue-600 text-sm transition-all duration-300">
             <GiRadarSweep className={`text-lg transition-all duration-300 ${sidebarOpen ? '' : 'mx-auto'}`} />
             <span className={`ml-3 transition-opacity duration-300 ${sidebarOpen ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'}`}>Metrics</span>
@@ -106,7 +102,6 @@ function AppLayout() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/logs" element={<Logs />} />
-            <Route path="/settings" element={<Settings />} />
             <Route path="/users" element={<Users />} />
           </Routes>
         </main>
