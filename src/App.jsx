@@ -12,7 +12,7 @@ import {
 } from "react-router-dom";
 import Dashboard from "./pages/Dashboard"
 import Logs from "./pages/Logs"
-import Users from "./pages/Users" 
+import UserManagement from "./pages/UserManagement/UserManagement" 
 import Metrics from "./pages/Metrics"
 
 const queryClient = new QueryClient();
@@ -104,7 +104,7 @@ function AppLayout() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/logs" element={<Logs />} />
             <Route path="/metrics" element={<Metrics />} />
-            <Route path="/users" element={<Users />} />
+            <Route path="/users" element={<UserManagement />} />
           </Routes>
         </main>
       </div>
