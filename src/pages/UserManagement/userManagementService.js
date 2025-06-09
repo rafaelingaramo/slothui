@@ -4,7 +4,8 @@ export async function fetchUsersFromApi({ page, size, sortField, sortDir, search
   const params = new URLSearchParams({
     page: page.toString(),
     size: size.toString(),
-    sort: `${sortField},${sortDir}`,
+    sortField: `${sortField}`,
+    sortOrder: `${sortDir}`,
   });
   if (search) params.append("search", search);
 

@@ -19,16 +19,16 @@ function UserManagement() {
   const [newPassword, setNewPassword] = useState("");
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [sortField, setSortField] = useState("name");
-  const [sortDir, setSortDir] = useState("asc");
+  const [sortDir, setSortDir] = useState("ASC");
   const USERS_PER_PAGE = 5;
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebouncedSearch(search);
-      setPage(0);
+      setPage(1);
     }, 500);
     return () => clearTimeout(timeout);
   }, [search]);
@@ -76,12 +76,12 @@ function UserManagement() {
 
   const toggleSort = (field) => {
     if (sortField === field) {
-      setSortDir(sortDir === "asc" ? "desc" : "asc");
+      setSortDir(sortDir === "asc" ? "DESC" : "ASC");
     } else {
       setSortField(field);
-      setSortDir("asc");
+      setSortDir("ASC");
     }
-    setPage(0);
+    setPage(1);
   };
 
   return (
@@ -132,10 +132,10 @@ function UserManagement() {
         </table>
 
         <div className="um-pagination">
-          <span>Page {page + 1} of {totalPages || 1}</span>
+          <span>Page {page} of {totalPages || 1}</span>
           <div className="um-page-controls">
-            <button disabled={page === 0} onClick={() => setPage((p) => Math.max(p - 1, 0))}>Previous</button>
-            <button disabled={page + 1 >= totalPages} onClick={() => setPage((p) => p + 1)}>Next</button>
+            <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>Previous</button>
+            <button disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>Next</button>
           </div>
         </div>
 
