@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useError } from "../context/ErrorContext";
 
 function Dashboard() {
+  const { showError } = useError();
   const queryClient = useQueryClient();
   const { data, isLoading, error } = useQuery({
     queryKey: ["messages"],
     queryFn: () =>
-      fetch("http://localhost:8080/api/messages").then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch messages");
+      fetch("http://localhost:8080/api/messages").then(async (res) => {
+        if (!res.ok) {
+          const message = await res.text();
+          showError(`Error ${res.status}: ${message}`);
+          throw new Error(`HTTP ${res.status}`);
+        } 
         return res.json();
       }),
   });
