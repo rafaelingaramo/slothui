@@ -1,5 +1,7 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { FaTrash, FaKey } from "react-icons/fa";
+import { useError } from "../../context/ErrorContext";
+import { getAuthToken } from "../Login/loginService";
 import Popup from "../../components/Popup";
 import "./UserManagement.css";
 import {
@@ -9,7 +11,7 @@ import {
   deleteUser,
   updateUserPassword,
 } from "./userManagementService";
-
+ // your login API function
 function UserManagement() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -24,6 +26,7 @@ function UserManagement() {
   const [sortField, setSortField] = useState("name");
   const [sortDir, setSortDir] = useState("ASC");
   const USERS_PER_PAGE = 5;
+  const { showError } = useError();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -34,7 +37,9 @@ function UserManagement() {
   }, [search]);
 
   const fetchUsers = useCallback(async () => {
-    const data = await fetchUsersFromApi({ page, size: USERS_PER_PAGE, sortField, sortDir, search: debouncedSearch });
+    const data = await fetchUsersFromApi({ page, size: USERS_PER_PAGE, sortField, sortDir, search: debouncedSearch }, 
+      showError
+    );
     setUsers(data.content || []);
     setTotalPages(data.totalPages || 1);
   }, [page, sortField, sortDir, debouncedSearch]);
@@ -44,7 +49,7 @@ function UserManagement() {
   }, [fetchUsers]);
 
   const openUserModal = async (id) => {
-    const data = await fetchUserById(id);
+    const data = await fetchUserById(id, showError);
     setSelectedUser(data);
   };
 
@@ -55,20 +60,20 @@ function UserManagement() {
   }, [selectedUser]);
 
   const handleDelete = async () => {
-    await deleteUser(confirmDelete);
+    await deleteUser(confirmDelete, showError);
     setConfirmDelete(null);
     fetchUsers();
   };
 
   const handleSave = async () => {
-    await saveUser(selectedUser);
+    await saveUser(selectedUser, showError);
     setModalOpen(false);
     setSelectedUser(null);
     fetchUsers();
   };
 
   const handleChangePassword = async () => {
-    await updateUserPassword(changePasswordUserId, newPassword);
+    await updateUserPassword(changePasswordUserId, newPassword, showError);
     setChangePasswordUserId(null);
     setNewPassword("");
     fetchUsers();

@@ -39,6 +39,19 @@ export const isTokenValid = () => {
 };
 
 export const getAuthToken = () => localStorage.getItem("jwt");
+export const getUserName = () => { 
+  const token = getAuthToken();
+  if (!token) return null;
+
+  try {
+    const payloadBase64 = token.split(".")[1];
+    const decodedPayload = JSON.parse(atob(payloadBase64));
+    return decodedPayload.userName.substring(0,1).toUpperCase() || null;
+  } catch (err) {
+    console.error("Failed to decode token", err);
+    return null;
+  }
+}
 
 export const logout = () => {
   localStorage.removeItem("jwt");

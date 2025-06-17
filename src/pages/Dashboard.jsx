@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useError } from "../context/ErrorContext";
+import { getAuthToken } from "../pages/Login/loginService";
 
 function Dashboard() {
   const { showError } = useError();
@@ -8,7 +9,9 @@ function Dashboard() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["messages"],
     queryFn: () =>
-      fetch("http://localhost:8080/api/messages").then(async (res) => {
+      fetch("http://localhost:8080/api/messages", {
+        headers: {"Authorization": `Bearer ${getAuthToken()}`}
+      }).then(async (res) => {
         if (!res.ok) {
           const message = await res.text();
           showError(`Error ${res.status}: ${message}`);
@@ -28,10 +31,11 @@ function Dashboard() {
     try {
       const response = await fetch(`http://localhost:8080/api/messages/${encodeURIComponent(selectedQueue)}`, {
         method: "DELETE",
+        headers: {"Authorization": `Bearer ${getAuthToken()}`}
       });
       if (!response.ok) throw new Error("Failed to purge queue");
       await queryClient.invalidateQueries(["messages"]);
-await queryClient.refetchQueries({ queryKey: ["messages"], exact: true });
+      await queryClient.refetchQueries({ queryKey: ["messages"], exact: true });
     } catch (err) {
       alert(err.message);
     } finally {

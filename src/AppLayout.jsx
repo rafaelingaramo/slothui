@@ -1,9 +1,9 @@
 // AppLayout.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { FiHome, FiFileText, FiSettings, FiUser, FiLogOut } from "react-icons/fi";
+import { FiHome, FiFileText, FiUser, FiLogOut } from "react-icons/fi";
 import { GiRadarSweep } from "react-icons/gi";
-import { CgProfile } from "react-icons/cg";
-import { Routes, Route, Link, useLocation } from "react-router-dom";
+import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
+import { logout, getUserName } from "./pages/Login/loginService"
 import Dashboard from "./pages/Dashboard";
 import Logs from "./pages/Logs";
 import UserManagement from "./pages/UserManagement/UserManagement";
@@ -15,6 +15,7 @@ function AppLayout() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -32,6 +33,11 @@ function AppLayout() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleLogout = () => { 
+    logout();
+    navigate("/login");
+  }
 
   return (
     <div className="flex min-h-screen w-screen bg-gray-100 overflow-hidden">
@@ -75,14 +81,12 @@ function AppLayout() {
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="w-8 h-8 bg-blue-200 rounded-full flex items-center justify-center font-bold text-blue-800"
             >
-              R
+              {getUserName()}
             </button>
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded shadow-lg z-10">
-                <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2">
-                  <CgProfile /> Profile
-                </button>
-                <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2">
+                <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2" 
+                  onClick={() => handleLogout()}>
                   <FiLogOut /> Logout
                 </button>
               </div>
